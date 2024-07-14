@@ -1,8 +1,10 @@
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from .forms import LoginForm
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import PasswordChangeView
 
 
 def user_login(request):
@@ -33,3 +35,8 @@ def dashboard(request):
     return render(request,
                   'account/dashboard.html',
                   {'section': 'dashboard'})
+
+
+class CustomPassChangeView(PasswordChangeView):
+    success_url = reverse_lazy('account:password_change_done')
+    
