@@ -1,10 +1,16 @@
-from django.shortcuts import render
-from django.urls import reverse_lazy
-from .forms import LoginForm
-from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth.views import (
+    PasswordChangeView,
+    PasswordResetCompleteView,
+    PasswordResetConfirmView,
+    PasswordResetDoneView,
+    PasswordResetView)
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.urls import reverse_lazy
+
+from .forms import LoginForm
 
 
 def user_login(request):
@@ -30,6 +36,7 @@ def user_login(request):
                   'account/login.html',
                   {'form': form})
 
+
 @login_required
 def dashboard(request):
     return render(request,
@@ -39,4 +46,11 @@ def dashboard(request):
 
 class CustomPassChangeView(PasswordChangeView):
     success_url = reverse_lazy('account:password_change_done')
-    
+
+
+class CustomPassResetView(PasswordResetView):
+    success_url = reverse_lazy('account:password_reset')
+
+
+class CustomResetConfirmView(PasswordResetConfirmView):
+    success_url = reverse_lazy('account:password_reset_complete')
